@@ -27,7 +27,7 @@ def main():
                 os.makedirs(folder_name)
             save_path = os.path.join(folder_name, "frame.jpg")
             st.session_state["save_path"] = save_path
-            webrtc_streamer(key="example", video_transformer_factory=VideoTransformer)
+            webrtc_streamer(key="example", video_processor_factory=VideoTransformer)
         else:
             st.write("Please enter your Banner ID and Name.")
 

@@ -24,7 +24,7 @@ def main():
     save_path = st.session_state.get("save_path")
 
     # Display webcam streamer
-    webrtc_ctx = webrtc_streamer(key="example", video_transformer_factory=VideoTransformer, sendback_audio=False)
+    webrtc_ctx = webrtc_streamer(key="example", video_processor_factory=VideoTransformer, sendback_audio=False)
 
     if st.button("Record Dataset"):
         if banner_id and name:

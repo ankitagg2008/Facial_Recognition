@@ -27,8 +27,8 @@ def main():
                 os.makedirs(folder_name)
             save_path = os.path.join(folder_name, "frame.jpg")
             st.session_state["save_path"] = save_path
-            # Trigger webrtc_streamer when the button is clicked
-            webrtc_streamer(key="example", video_processor_factory=VideoTransformer)
+            # Keep the streaming window open until manually closed
+            webrtc_streamer(key="example", video_processor_factory=VideoTransformer, sendback_audio=False)
         else:
             st.write("Please enter your Banner ID and Name.")
 

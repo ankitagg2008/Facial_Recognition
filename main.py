@@ -1,32 +1,18 @@
-import cv2
 import os
 import streamlit as st
+from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
 
+class VideoTransformer(VideoTransformerBase):
+    def transform(self, frame):
+        # Display the frame in the Streamlit app
+        st.image(frame)
 
-def record_dataset(banner_id, name):
-    st.write("Recording dataset...")
-    # Create folder to store images if it doesn't exist
-    folder_name = f"{banner_id}_{name}"
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)
+        # Save the frame to a folder
+        save_path = st.session_state.get("save_path")
+        if save_path:
+            frame.save(save_path, format="JPEG")
 
-    # Open camera
-    cap = cv2.VideoCapture(0)
-
-    # Continuously display live feed and record images
-    for i in range(200):
-        ret, frame = cap.read()
-        if ret:
-            # Display live feed
-            st.image(frame, channels="BGR")
-
-            # Save image to folder
-            image_path = os.path.join(folder_name, f"{i}.jpg")
-            cv2.imwrite(image_path, frame)
-
-    cap.release()
-    st.write("Dataset recorded successfully!")
-
+        return frame
 
 def main():
     st.title("Dataset Recorder")
@@ -36,14 +22,18 @@ def main():
 
     if st.button("Record Dataset"):
         if banner_id and name:
-            record_dataset(banner_id, name)
+            folder_name = f"{banner_id}_{name}"
+            if not os.path.exists(folder_name):
+                os.makedirs(folder_name)
+            save_path = os.path.join(folder_name, "frame.jpg")
+            st.session_state["save_path"] = save_path
+            webrtc_streamer(key="example", video_transformer_factory=VideoTransformer)
         else:
             st.write("Please enter your Banner ID and Name.")
 
     if st.button("Retake Dataset"):
         st.write("Retake Dataset button clicked!")
-        # Add functionality to retake dataset here
-
+        st.session_state.pop("save_path", None)
 
 if __name__ == "__main__":
     main()

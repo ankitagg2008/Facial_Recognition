@@ -20,6 +20,9 @@ def main():
     banner_id = st.text_input("Banner ID")
     name = st.text_input("Name")
 
+    # Initialize the webcam streamer
+    webrtc_ctx = webrtc_streamer(key="example", video_processor_factory=VideoTransformer, sendback_audio=False)
+
     if st.button("Record Dataset"):
         if banner_id and name:
             folder_name = f"{banner_id}_{name}"
@@ -27,8 +30,10 @@ def main():
                 os.makedirs(folder_name)
             save_path = os.path.join(folder_name, "frame.jpg")
             st.session_state["save_path"] = save_path
-            # Keep the streaming window open until manually closed
-            webrtc_streamer(key="example", video_processor_factory=VideoTransformer, sendback_audio=False)
+            # Display the webcam streamer when the button is clicked
+            if webrtc_ctx.video_processor:
+                webrtc_ctx.video_processor = None
+            webrtc_ctx.video_processor = VideoTransformer()
         else:
             st.write("Please enter your Banner ID and Name.")
 

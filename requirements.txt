@@ -1,4 +1,2 @@
 streamlit
-libgl1-mesa-glx
-Flask
-streamlit
+streamlit-webrtc

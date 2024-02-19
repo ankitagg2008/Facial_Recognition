@@ -1,3 +1,5 @@
 opencv-python
 streamlit
 libgl1-mesa-glx
+Flask
+streamlit
